@@ -1,19 +1,19 @@
 <div class="informate-container w-full h-[100vh] p-8 m-auto bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950">
   <h2 class="text-white text-2xl font-bold mt-4 mb-6 text-center">Poseemos las siguientes categorias</h2>
-  <div class="informate-images grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div class="informate-images">
      <!-- Lista de Categorías Existentes -->
-            <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700">
-                <h3 class="text-xl font-bold mb-4">Categorías Existentes</h3>
+            <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700 w-full">
+                <h3 class="text-xl font-bold mb-4 text-white">Categorías Existentes</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     @for (categoria of categorias; track categoria.idCategoria) {
-                        <div class="bg-slate-900 p-5 rounded-lg border border-slate-700 flex flex-col shadow-md">
+                        <div class="bg-slate-900 p-5 rounded-lg border border-slate-700 flex flex-col shadow-md h-[300px] w-[350px]">
                             @if (categoria.imagenUrl) {
                                 <img [src]="categoria.imagenUrl" alt="img" class="w-full h-32 object-cover rounded mb-4">
                             }
                             <h4 class="font-bold text-lg text-blue-400 mb-1">{{ categoria.nombre }}</h4>
                             <p class="text-sm text-gray-400 mb-4 flex-1">{{ categoria.descripcion }}</p>
                             <div class="flex justify-between items-center text-sm font-semibold">
-                                <span>👥 {{ categoria.capacidad }} pers.</span>
+                                <span class="text-white">{{ categoria.capacidad }} pers.</span>
                                 <span class="text-green-400">${{ categoria.tarifaBase }}</span>
                             </div>
                         </div>
