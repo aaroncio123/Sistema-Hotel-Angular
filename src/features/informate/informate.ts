@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Categoria } from '../../models/categoria.model';
 
 @Component({
   selector: 'app-informate',
@@ -6,4 +7,6 @@ import { Component } from '@angular/core';
   templateUrl: './informate.html',
   styleUrl: './informate.css',
 })
-export class Informate {}
+export class Informate {
+  categorias: Categoria[] = [];
+}

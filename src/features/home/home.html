@@ -50,18 +50,41 @@
 
         <!-- VISTA: CATEGORÍAS -->
         @if (vistaActual === 'categorias') {
-            <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700 max-w-2xl">
+            <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700 max-w-2xl mb-8">
                 <h3 class="text-xl font-bold mb-2">Crear Nueva Categoría</h3>
                 <p class="text-gray-400 mb-6">Añade categorías como: Suite, Presidencial, Matrimonial, etc.</p>
                 <div class="space-y-5">
-                    <input type="text" placeholder="Nombre de la categoría" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    <input type="text" [(ngModel)]="nuevaCategoria.nombre" placeholder="Nombre de la categoría" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    <input type="text" [(ngModel)]="nuevaCategoria.slug" placeholder="Slug (se genera automáticamente al escribir el nombre)" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500" disabled>
                     <div class="grid grid-cols-2 gap-4">
-                        <input type="number" placeholder="Tarifa Base ($)" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
-                        <input type="number" placeholder="Capacidad (Personas)" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                        <input type="number" [(ngModel)]="nuevaCategoria.tarifaBase" placeholder="Tarifa Base ($)" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                        <input type="number" [(ngModel)]="nuevaCategoria.capacidad" placeholder="Capacidad (Personas)" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
                     </div>
-                    <input type="text" placeholder="URL de la imagen (o subir archivo)" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
-                    <textarea placeholder="Descripción o beneficios incluidos..." class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500 h-24"></textarea>
-                    <button class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-bold w-full transition-colors">Guardar Categoría</button>
+                    <input type="text" [(ngModel)]="nuevaCategoria.imagenUrl" placeholder="URL de la imagen" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    <textarea [(ngModel)]="nuevaCategoria.descripcion" placeholder="Descripción o beneficios incluidos..." class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500 h-24"></textarea>
+                    <button (click)="crearCategoria()" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-bold w-full transition-colors cursor-pointer">Guardar Categoría</button>
+                </div>
+            </div>
+
+            <!-- Lista de Categorías Existentes -->
+            <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700">
+                <h3 class="text-xl font-bold mb-4">Categorías Existentes</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @for (categoria of categorias; track categoria.idCategoria) {
+                        <div class="bg-slate-900 p-5 rounded-lg border border-slate-700 flex flex-col shadow-md">
+                            @if (categoria.imagenUrl) {
+                                <img [src]="categoria.imagenUrl" alt="img" class="w-full h-32 object-cover rounded mb-4">
+                            }
+                            <h4 class="font-bold text-lg text-blue-400 mb-1">{{ categoria.nombre }}</h4>
+                            <p class="text-sm text-gray-400 mb-4 flex-1">{{ categoria.descripcion }}</p>
+                            <div class="flex justify-between items-center text-sm font-semibold">
+                                <span>👥 {{ categoria.capacidad }} pers.</span>
+                                <span class="text-green-400">${{ categoria.tarifaBase }}</span>
+                            </div>
+                        </div>
+                    } @empty {
+                        <p class="text-gray-400 col-span-full">No hay categorías registradas aún. ¡Crea la primera!</p>
+                    }
                 </div>
             </div>
         }
