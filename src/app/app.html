@@ -1,4 +1,10 @@
+@if (!isLoginRoute() && !isHomeRoute()) {
 <app-header></app-header>
+}
 <main>
-  <app-home></app-home>
+  <router-outlet></router-outlet>
 </main>
+@if (!isLoginRoute() && !isHomeRoute()) {
+<app-footer></app-footer>
+<app-chatbot></app-chatbot>
+}

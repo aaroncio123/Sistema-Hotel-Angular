@@ -1,3 +1,103 @@
-<div class="inicio-container">
-    <h2 class="text-2xl font-weight mt-8 mb-4 text-center text-black">Bienvenido a nuestros servicios donde tu sueño es nuestra misión</h2>
+<div class="flex h-screen bg-slate-900 text-white overflow-hidden">
+    
+    <!-- Barra Lateral (Sidebar) -->
+    <div class="w-72 bg-slate-950 p-6 flex flex-col space-y-4 shadow-2xl z-10 border-r border-slate-800">
+        <div class="flex items-center space-x-3 mb-8">
+            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center font-bold">A</div>
+            <h2 class="text-xl font-bold">Admin Panel</h2>
+        </div>
+        
+        <button (click)="cambiarVista('dashboard')" [class.bg-blue-600]="vistaActual === 'dashboard'" class="p-3 rounded-lg hover:bg-slate-800 transition-colors text-left flex items-center space-x-3">
+           <span>Dashboard</span>
+        </button>
+        <button (click)="cambiarVista('categorias')" [class.bg-blue-600]="vistaActual === 'categorias'" class="p-3 rounded-lg hover:bg-slate-800 transition-colors text-left flex items-center space-x-3">
+            <span>Crear Categoría</span>
+        </button>
+        <button (click)="cambiarVista('hoteles')" [class.bg-blue-600]="vistaActual === 'hoteles'" class="p-3 rounded-lg hover:bg-slate-800 transition-colors text-left flex items-center space-x-3">
+            <span>Crear Hoteles</span>
+        </button>
+        <button (click)="cambiarVista('habitaciones')" [class.bg-blue-600]="vistaActual === 'habitaciones'" class="p-3 rounded-lg hover:bg-slate-800 transition-colors text-left flex items-center space-x-3">
+            <span>Gestionar Cuartos</span>
+        </button>
+        
+        <!-- Botón de Salida -->
+        <div class="mt-auto pt-8">
+             <button (click)="regresar()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300">Cerrar Sesión</button>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="flex-1 p-8 overflow-y-auto bg-gradient-to-br from-slate-900 to-blue-950">
+        <h2 class="text-2xl font-bold mb-8 text-gray-100">Bienvenido administrador, ¿Qué deseas hacer hoy?</h2>
+
+        <!-- VISTA: DASHBOARD (se manifiestan datos harcodeados para vista previa)-->
+        @if (vistaActual === 'dashboard') {
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700">
+                    <h3 class="text-gray-400 text-sm font-semibold uppercase tracking-wider">Ingresos Totales</h3>
+                    <p class="text-4xl font-bold text-green-400 mt-2">$24,500</p>
+                </div>
+                <div class="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700">
+                    <h3 class="text-gray-400 text-sm font-semibold uppercase tracking-wider">Reservas Activas</h3>
+                    <p class="text-4xl font-bold text-blue-400 mt-2">142</p>
+                </div>
+            </div>
+            <!-- Placeholder del Gráfico -->
+            <div class="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700 h-80 flex flex-col items-center justify-center">
+                <span class="text-gray-400">Aquí instalaremos tu librería de gráficos (Ej: Chart.js)</span>
+            </div>
+        }
+
+        <!-- VISTA: CATEGORÍAS -->
+        @if (vistaActual === 'categorias') {
+            <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700 max-w-2xl">
+                <h3 class="text-xl font-bold mb-2">Crear Nueva Categoría</h3>
+                <p class="text-gray-400 mb-6">Añade categorías como: Suite, Presidencial, Matrimonial, etc.</p>
+                <div class="space-y-5">
+                    <input type="text" placeholder="Nombre de la categoría" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="number" placeholder="Tarifa Base ($)" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                        <input type="number" placeholder="Capacidad (Personas)" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    </div>
+                    <input type="text" placeholder="URL de la imagen (o subir archivo)" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    <textarea placeholder="Descripción o beneficios incluidos..." class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500 h-24"></textarea>
+                    <button class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-bold w-full transition-colors">Guardar Categoría</button>
+                </div>
+            </div>
+        }
+
+        <!-- VISTA: HOTELES -->
+        @if (vistaActual === 'hoteles') {
+            <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700 max-w-2xl">
+                <h3 class="text-xl font-bold mb-2">Registrar Nuevo Hotel</h3>
+                <p class="text-gray-400 mb-6">Añade sedes de hoteles a la plataforma.</p>
+                <div class="space-y-5">
+                    <input type="text" placeholder="Nombre del Hotel (Ej: Hotel Paraíso Central)" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    <input type="text" placeholder="Ubicación / Ciudad" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    <button class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-bold w-full transition-colors">Guardar Hotel</button>
+                </div>
+            </div>
+        }
+
+        <!-- VISTA: HABITACIONES -->
+        @if (vistaActual === 'habitaciones') {
+            <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700">
+                <h3 class="text-xl font-bold mb-6">Gestión de Estado de Habitaciones</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Tarjeta de Habitación de ejemplo -->
+                    <div class="bg-slate-900 p-5 rounded-lg border-l-4 border-green-500 shadow-md">
+                        <h4 class="font-bold text-lg mb-1">Habitación 101</h4>
+                        <p class="text-sm text-gray-400 mb-3">Suite Presidencial</p>
+                        <select class="w-full bg-slate-800 border border-slate-700 p-2 rounded outline-none cursor-pointer focus:border-blue-500">
+                            <option value="Disponible" class="text-green-400">Disponible</option>
+                            <option value="Ocupada" class="text-red-400">Ocupada</option>
+                            <option value="En Limpieza" class="text-yellow-400">En Limpieza</option>
+                            <option value="Mantenimiento" class="text-gray-400">Mantenimiento</option>
+                        </select>
+                    </div>
+                    <!-- Puedes duplicar la tarjeta anterior para simular más cuartos -->
+                </div>
+            </div>
+        }
+    </div>
 </div>
