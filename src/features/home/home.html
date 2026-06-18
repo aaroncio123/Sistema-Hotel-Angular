@@ -50,7 +50,7 @@
 
         <!-- VISTA: CATEGORÍAS -->
         @if (vistaActual === 'categorias') {
-            <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700 max-w-2xl mb-8">
+            <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700 max-w-2xl mr-auto ml-auto flex items-center mb-8 justify-center flex flex-col">
                 <h3 class="text-xl font-bold mb-2">Crear Nueva Categoría</h3>
                 <p class="text-gray-400 mb-6">Añade categorías como: Suite, Presidencial, Matrimonial, etc.</p>
                 <div class="space-y-5">
@@ -91,35 +91,85 @@
 
         <!-- VISTA: HOTELES -->
         @if (vistaActual === 'hoteles') {
-            <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700 max-w-2xl">
-                <h3 class="text-xl font-bold mb-2">Registrar Nuevo Hotel</h3>
-                <p class="text-gray-400 mb-6">Añade sedes de hoteles a la plataforma.</p>
-                <div class="space-y-5">
-                    <input type="text" placeholder="Nombre del Hotel (Ej: Hotel Paraíso Central)" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
-                    <input type="text" placeholder="Ubicación / Ciudad" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
-                    <button class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-bold w-full transition-colors">Guardar Hotel</button>
+            <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700 max-w-2xl mr-auto ml-auto flex items-center mb-8 justify-center flex-col">
+                <h3 class="text-xl font-bold mb-2">Crear Nuevo Hotel</h3>
+                <p class="text-gray-400 mb-6">Registra un nuevo hotel en el sistema.</p>
+                <div class="space-y-5 w-full">
+                    <input type="text" [(ngModel)]="nuevoHotel.nombre" placeholder="Nombre del hotel" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    <input type="text" [(ngModel)]="nuevoHotel.slug" placeholder="Slug (modificable)" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    <input type="text" [(ngModel)]="nuevoHotel.descripcion_breve" placeholder="Descripción breve" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    <textarea [(ngModel)]="nuevoHotel.descripcion" placeholder="Descripción completa..." class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500 h-24"></textarea>
+                    <input type="text" [(ngModel)]="nuevoHotel.direccion" placeholder="Dirección del hotel" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    <input type="text" [(ngModel)]="nuevoHotel.ciudad" placeholder="Ciudad" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    <input type="text" [(ngModel)]="nuevoHotel.telefono" placeholder="Teléfono" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    <input type="email" [(ngModel)]="nuevoHotel.correo" placeholder="Correo electrónico" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    <input type="text" [(ngModel)]="nuevoHotel.imagenUrl" placeholder="URL de la imagen principal" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    <button (click)="crearHotel()" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-bold w-full transition-colors cursor-pointer">Guardar Hotel</button>
+                </div>
+            </div>
+
+            <!-- Lista de Hoteles Existentes -->
+            <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700 mt-8">
+                <h3 class="text-xl font-bold mb-4">Hoteles Registrados</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @for (hotel of hoteles; track hotel.id_hotel) {
+                        <div class="bg-slate-900 p-5 rounded-lg border border-slate-700 flex flex-col shadow-md hover:border-blue-500 transition-colors">
+                            @if ($any(hotel).imagen_url || hotel.imagenUrl) {
+                                <img [src]="$any(hotel).imagen_url || hotel.imagenUrl" alt="img" class="w-full h-40 object-cover rounded-lg mb-4 shadow-sm">
+                            } @else {
+                                <div class="w-full h-40 bg-slate-800 rounded-lg mb-4 flex items-center justify-center text-gray-500 shadow-inner font-semibold text-sm">Sin imagen</div>
+                            }
+                            <h4 class="font-bold text-xl text-blue-400 mb-1">{{ hotel.nombre }}</h4>
+                            <p class="text-sm text-gray-400 mb-4 flex-1">{{ hotel.descripcion_breve }}</p>
+                            <div class="text-sm font-semibold text-gray-300 mb-5">
+                                {{ hotel.ciudad }}
+                            </div>
+                        </div>
+                    } @empty {
+                        <p class="text-gray-400 col-span-full">No hay hoteles registrados aún.</p>
+                    }
                 </div>
             </div>
         }
 
         <!-- VISTA: HABITACIONES -->
         @if (vistaActual === 'habitaciones') {
-            <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700">
-                <h3 class="text-xl font-bold mb-6">Gestión de Estado de Habitaciones</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Tarjeta de Habitación de ejemplo -->
-                    <div class="bg-slate-900 p-5 rounded-lg border-l-4 border-green-500 shadow-md">
-                        <h4 class="font-bold text-lg mb-1">Habitación 101</h4>
-                        <p class="text-sm text-gray-400 mb-3">Suite Presidencial</p>
-                        <select class="w-full bg-slate-800 border border-slate-700 p-2 rounded outline-none cursor-pointer focus:border-blue-500">
-                            <option value="Disponible" class="text-green-400">Disponible</option>
-                            <option value="Ocupada" class="text-red-400">Ocupada</option>
-                            <option value="En Limpieza" class="text-yellow-400">En Limpieza</option>
-                            <option value="Mantenimiento" class="text-gray-400">Mantenimiento</option>
-                        </select>
-                    </div>
-                    <!-- Puedes duplicar la tarjeta anterior para simular más cuartos -->
+            <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700 max-w-2xl mx-auto flex-col mb-8">
+                <h3 class="text-xl font-bold mb-2">Crear Nueva Habitación</h3>
+                <p class="text-gray-400 mb-6">Asigna nuevas habitaciones a los hoteles registrados.</p>
+                <div class="space-y-5 w-full">
+                    <input type="text" [(ngModel)]="nuevaHabitacion.numero" placeholder="Número de la habitación (Ej: 101)" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    <input type="text" [(ngModel)]="nuevaHabitacion.tipo" placeholder="Tipo (Ej: Suite Presidencial)" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500">
+                    <select [(ngModel)]="nuevaHabitacion.estado" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500 cursor-pointer">
+                        <option value="Disponible">Disponible</option>
+                        <option value="Ocupada">Ocupada</option>
+                        <option value="En Limpieza">En Limpieza</option>
+                        <option value="Mantenimiento">Mantenimiento</option>
+                    </select>
+                    <select [(ngModel)]="nuevaHabitacion.id_hotel" class="w-full p-3 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500 cursor-pointer">
+                        <option value="0" disabled selected>Seleccione el Hotel asociado...</option>
+                        @for (hotel of hoteles; track hotel.id_hotel) {
+                            <option [value]="hotel.id_hotel">{{ hotel.nombre }}</option>
+                        }
+                    </select>
+                    <button (click)="crearHabitacion()" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-bold w-full transition-colors cursor-pointer">Guardar Habitación</button>
                 </div>
+            </div>
+
+            <!-- Lista de Habitaciones -->
+            <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700">
+                <h3 class="text-xl font-bold mb-6">Habitaciones Registradas en el Sistema</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @for (hab of habitaciones; track hab.idHabitacion) {
+                        <div class="bg-slate-900 p-5 rounded-lg shadow-md border-l-4" [class.border-green-500]="hab.estado === 'Disponible'" [class.border-red-500]="hab.estado === 'Ocupada'" [class.border-yellow-500]="hab.estado === 'En Limpieza'" [class.border-gray-500]="hab.estado === 'Mantenimiento'">
+                            <h4 class="font-bold text-lg mb-1">Habitación {{ hab.numero }}</h4>
+                            <p class="text-sm text-gray-400 mb-3">{{ hab.tipo }}</p>
+                            <p class="text-sm font-bold" [class.text-green-400]="hab.estado === 'Disponible'" [class.text-red-400]="hab.estado === 'Ocupada'" [class.text-yellow-400]="hab.estado === 'En Limpieza'" [class.text-gray-400]="hab.estado === 'Mantenimiento'">{{ hab.estado }}</p>
+                        </div>
+                    } @empty {
+                        <p class="text-gray-400 col-span-full">No hay habitaciones registradas.</p>
+                    }
+                </div> 
             </div>
         }
     </div>
