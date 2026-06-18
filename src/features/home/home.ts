@@ -151,7 +151,8 @@ export class Home implements OnInit {
         idHotel: hotelIdSeleccionado
       },
       categoria: {
-        idCategoria: categoriaIdSeleccionada
+        idCategoria: categoriaIdSeleccionada,
+        id_categoria: categoriaIdSeleccionada
       }
     };
 

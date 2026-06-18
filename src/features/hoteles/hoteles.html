@@ -6,7 +6,7 @@
             <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700 flex flex-col shadow-full">
                 <h3 class="text-xl font-bold mb-4 text-white">Hoteles Existentes</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @for (hotel of hoteles; track hotel.id_hotel) {
+                    @for (hotel of hoteles; track hotel.idHotel) {
                         <div (click)="verDetalleHotel(hotel)" class="bg-slate-900 p-5 rounded-lg border border-slate-700 flex flex-col shadow-md h-[350px] w-full hover:border-yellow-400 transition-colors duration-300 cursor-pointer">
                             @if ($any(hotel).imagen_url || hotel.imagenUrl) {
                                 <img [src]="$any(hotel).imagen_url || hotel.imagenUrl" alt="img" class="w-full h-32 object-cover rounded mb-4">
@@ -18,9 +18,14 @@
                             <div class="flex justify-between items-center text-sm font-semibold">
                                 <span class="text-white">{{ hotel.ciudad }}</span>
                             </div>
-                            <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-colors mt-4 shadow-md">
-                                Ver Detalles
-                            </button>
+                            <div class="flex gap-3 mt-4">
+                                <button (click)="verDetalleHotel(hotel); $event.stopPropagation()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-colors shadow-md">
+                                    Detalles
+                                </button>
+                                <button (click)="prepararReserva(hotel); $event.stopPropagation()" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition-colors shadow-md">
+                                    Reservar
+                                </button>
+                            </div>
                         </div>
                     } @empty {
                         <p class="text-gray-400 col-span-full">No hay hoteles registrados aún.</p>
@@ -62,7 +67,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @for (hab of habitacionesHotel; track hab.idHabitacion) {
+                    @for (hab of habitacionesHotel; track hab.numero) {
                         <div class="bg-slate-900 p-6 rounded-xl border-l-4 shadow-md" [class.border-green-500]="hab.estado === 'Disponible'" [class.border-red-500]="hab.estado === 'Ocupada'" [class.border-yellow-500]="hab.estado === 'En Limpieza'" [class.border-gray-500]="hab.estado === 'Mantenimiento'">
                             <h5 class="font-bold text-xl mb-2 text-white">Habitación {{ hab.numero }} <span class="text-sm font-normal text-gray-400">(Piso {{ hab.piso }})</span></h5>
                             <p class="text-gray-400 mb-2">{{ hab.categoria?.nombre || hab.tipo }}</p>
@@ -94,9 +99,9 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-300 mb-2">Habitación a Reservar</label>
                         <select [(ngModel)]="nuevaReserva.habitacionId" class="w-full p-4 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500 cursor-pointer transition-colors">
-                            <option value="" disabled selected>Seleccione una habitación...</option>
-                            @for (hab of habitacionesHotel; track hab.idHabitacion) {
-                                <option [value]="hab.idHabitacion" [disabled]="hab.estado !== 'Disponible'">Habitación {{ hab.numero }} - {{ hab.categoria?.nombre || hab.tipo }} ({{ hab.estado }})</option>
+                            <option [ngValue]="''" disabled selected>Seleccione una habitación...</option>
+                            @for (hab of habitacionesHotel; track hab.numero) {
+                                <option [ngValue]="hab.idHabitacion || $any(hab).id_habitacion" [disabled]="hab.estado !== 'Disponible'">Habitación {{ hab.numero }} - {{ hab.categoria?.nombre || hab.tipo }} ({{ hab.estado }})</option>
                             }
                         </select>
                     </div>
