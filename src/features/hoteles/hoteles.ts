@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { HotelService } from '../../service/hotel.service';
 import { Hotel } from '../../models/hotel.model';
 import { HabitacionService } from '../../service/habitacion.service';
@@ -32,6 +33,7 @@ export class Hoteles implements OnInit {
   private location = inject(Location);
   private habitacionService = inject(HabitacionService);
   private reservaService = inject(ReservaService);
+  private router = inject(Router);
 
   ngOnInit() {
     this.cargarHoteles();
@@ -78,11 +80,28 @@ export class Hoteles implements OnInit {
       return;
     }
 
-    if (new Date(this.nuevaReserva.fecha_fin) <= new Date(this.nuevaReserva.fecha_inicio)) {
+    const inicio = new Date(this.nuevaReserva.fecha_inicio);
+    const fin = new Date(this.nuevaReserva.fecha_fin);
+
+    if (fin <= inicio) {
       alert('Error: La fecha de salida debe ser posterior a la fecha de entrada.');
       return;
     }
     
+    // --- CÁLCULO DE PRECIOS E IGV ---
+    // 1. Calculamos la cantidad de días
+    const diffTime = Math.abs(fin.getTime() - inicio.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    // 2. Buscamos la tarifa base de la habitación
+    const habSeleccionada = this.habitacionesHotel.find(h => h.idHabitacion == this.nuevaReserva.habitacionId || (h as any).id_habitacion == this.nuevaReserva.habitacionId);
+    const tarifaBase = habSeleccionada?.categoria?.tarifaBase || 100; // Por defecto $100 si no tiene
+
+    // 3. Calculamos Subtotal, IGV y Total
+    const subtotal = diffDays * tarifaBase;
+    const igv = subtotal * 0.18; // 18% IGV
+    const totalPagar = subtotal + igv;
+
     // Armamos el objeto de Reserva tal cual lo espera el backend de Spring Boot
     const reservaAGuardar: any = {
       usuario: this.nuevaReserva.usuario,
@@ -97,11 +116,10 @@ export class Hoteles implements OnInit {
 
     this.reservaService.crear(reservaAGuardar).subscribe({
       next: () => {
-        alert('¡Reserva registrada exitosamente!');
+        alert(`¡Reserva exitosa!\n\nEstadía: ${diffDays} noches\nSubtotal: $${subtotal.toFixed(2)}\nIGV (18%): $${igv.toFixed(2)}\nTotal Pagado: $${totalPagar.toFixed(2)}`);
         this.nuevaReserva = { usuario: '', habitacionId: '', fecha_inicio: '', fecha_fin: '' };
-        this.vistaActual = 'detalle';
-        this.location.go(`/hoteles/${this.hotelSeleccionado?.slug}`);
-        this.cargarHabitacionesDelHotel(this.hotelSeleccionado!.id_hotel); 
+        
+        this.router.navigate(['/home']);
       },
       error: (err) => {
         console.error('Error al registrar reserva', err);
