@@ -1,0 +1,127 @@
+<div class="hoteles-container w-full min-h-[100vh] p-8 m-auto bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-white overflow-y-auto">
+    <div class="informate-images w-[80%] m-auto flex flex-col gap-8">
+        
+        <!-- VISTA: LISTA DE HOTELES -->
+        @if (vistaActual === 'lista') {
+            <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700 flex flex-col shadow-full">
+                <h3 class="text-xl font-bold mb-4 text-white">Hoteles Existentes</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @for (hotel of hoteles; track hotel.idHotel) {
+                        <div (click)="verDetalleHotel(hotel)" class="bg-slate-900 p-5 rounded-lg border border-slate-700 flex flex-col shadow-md h-[350px] w-full hover:border-yellow-400 transition-colors duration-300 cursor-pointer">
+                            @if ($any(hotel).imagen_url || hotel.imagenUrl) {
+                                <img [src]="$any(hotel).imagen_url || hotel.imagenUrl" alt="img" class="w-full h-32 object-cover rounded mb-4">
+                            } @else {
+                                <div class="w-full h-32 bg-slate-800 rounded-lg mb-4 flex items-center justify-center text-gray-500 font-semibold text-sm">Sin imagen</div>
+                            }
+                            <h4 class="font-bold text-lg text-yellow-400 mb-1">{{ hotel.nombre }}</h4>
+                            <p class="text-sm text-gray-400 mb-4 flex-1 overflow-hidden">{{ hotel.descripcion_breve || hotel.descripcion }}</p>
+                            <div class="flex justify-between items-center text-sm font-semibold">
+                                <span class="text-white">{{ hotel.ciudad }}</span>
+                            </div>
+                            <div class="flex gap-3 mt-4">
+                                <button (click)="verDetalleHotel(hotel); $event.stopPropagation()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-colors shadow-md">
+                                    Detalles
+                                </button>
+                                <button (click)="prepararReserva(hotel); $event.stopPropagation()" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition-colors shadow-md">
+                                    Reservar
+                                </button>
+                            </div>
+                        </div>
+                    } @empty {
+                        <p class="text-gray-400 col-span-full">No hay hoteles registrados aún.</p>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- VISTA: DETALLE DEL HOTEL -->
+        @if (vistaActual === 'detalle' && hotelSeleccionado) {
+            <div class="max-w-5xl mx-auto bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700 w-full">
+                <button (click)="volverALista()" class="mb-6 text-blue-400 hover:text-blue-300 flex items-center gap-2 cursor-pointer font-semibold">
+                    <span>← Volver a todos los hoteles</span>
+                </button>
+                
+                <div class="flex flex-col md:flex-row gap-8 mb-10">
+                    @if ($any(hotelSeleccionado).imagen_url || hotelSeleccionado.imagenUrl) {
+                        <img [src]="$any(hotelSeleccionado).imagen_url || hotelSeleccionado.imagenUrl" alt="Hotel" class="w-full md:w-1/2 h-72 object-cover rounded-xl shadow-md">
+                    } @else {
+                        <div class="w-full md:w-1/2 h-72 bg-slate-900 rounded-xl flex items-center justify-center text-gray-500 border border-slate-700 font-semibold shadow-inner">Sin imagen</div>
+                    }
+                    <div class="flex-1 flex flex-col justify-center">
+                        <h3 class="text-4xl font-bold text-white mb-4">{{ hotelSeleccionado.nombre }}</h3>
+                        <p class="text-yellow-400 font-semibold text-lg mb-6">{{ hotelSeleccionado.direccion }}, {{ hotelSeleccionado.ciudad }}</p>
+                        <p class="text-gray-300 mb-6 leading-relaxed">{{ hotelSeleccionado.descripcion }}</p>
+                        <div class="flex flex-wrap gap-4 text-sm text-gray-400 bg-slate-900 p-4 rounded-lg">
+                            <span>{{ hotelSeleccionado.telefono }}</span>
+                            <span>{{ hotelSeleccionado.correo }}</span>
+                            <span>Slug: {{ hotelSeleccionado.slug }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4">
+                    <h4 class="text-2xl font-bold text-gray-100">Habitaciones Disponibles</h4>
+                    <button (click)="prepararReserva()" class="bg-green-600 hover:bg-green-700 px-8 py-3 rounded-lg font-bold transition-colors cursor-pointer text-white shadow-lg">
+                        + Registrar Reserva
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @for (hab of habitacionesHotel; track hab.numero) {
+                        <div class="bg-slate-900 p-6 rounded-xl border-l-4 shadow-md" [class.border-green-500]="hab.estado === 'Disponible'" [class.border-red-500]="hab.estado === 'Ocupada'" [class.border-yellow-500]="hab.estado === 'En Limpieza'" [class.border-gray-500]="hab.estado === 'Mantenimiento'">
+                            <h5 class="font-bold text-xl mb-2 text-white">Habitación {{ hab.numero }} <span class="text-sm font-normal text-gray-400">(Piso {{ hab.piso }})</span></h5>
+                            <p class="text-gray-400 mb-2">{{ hab.categoria?.nombre || hab.tipo }}</p>
+                            <p class="font-semibold text-lg" [class.text-green-400]="hab.estado === 'Disponible'" [class.text-red-400]="hab.estado === 'Ocupada'" [class.text-yellow-400]="hab.estado === 'En Limpieza'" [class.text-gray-400]="hab.estado === 'Mantenimiento'">{{ hab.estado }}</p>
+                        </div>
+                    } @empty {
+                        <p class="text-gray-400 col-span-full">No se encontraron habitaciones asociadas a este hotel.</p>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- VISTA: REGISTRAR RESERVA -->
+        @if (vistaActual === 'reserva' && hotelSeleccionado) {
+            <div class="max-w-2xl mx-auto bg-slate-800 p-10 rounded-xl shadow-lg border border-slate-700 flex flex-col w-full">
+                <button (click)="vistaActual = 'detalle'" class="mb-6 text-blue-400 hover:text-blue-300 flex items-center gap-2 self-start cursor-pointer font-semibold">
+                    <span>← Volver a los detalles del hotel</span>
+                </button>
+
+                <h3 class="text-3xl font-bold mb-3 text-white">Registrar Reserva</h3>
+                <p class="text-gray-400 mb-8 text-lg">Estás reservando en <span class="font-bold text-yellow-400">{{ hotelSeleccionado.nombre }}</span>.</p>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-300 mb-2">Nombre del Cliente</label>
+                        <input type="text" [(ngModel)]="nuevaReserva.usuario" placeholder="Ej: Juan Pérez" class="w-full p-4 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500 transition-colors">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-300 mb-2">Habitación a Reservar</label>
+                        <select [(ngModel)]="nuevaReserva.habitacionId" class="w-full p-4 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500 cursor-pointer transition-colors">
+                            <option [ngValue]="''" disabled selected>Seleccione una habitación...</option>
+                            @for (hab of habitacionesHotel; track hab.numero) {
+                                <option [ngValue]="hab.idHabitacion || $any(hab).id_habitacion" [disabled]="hab.estado !== 'Disponible'">Habitación {{ hab.numero }} - {{ hab.categoria?.nombre || hab.tipo }} ({{ hab.estado }})</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-300 mb-2">Fecha de Entrada</label>
+                            <input type="date" [(ngModel)]="nuevaReserva.fecha_inicio" class="w-full p-4 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-300 mb-2">Fecha de Salida</label>
+                            <input type="date" [(ngModel)]="nuevaReserva.fecha_fin" class="w-full p-4 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500 transition-colors">
+                        </div>
+                    </div>
+
+                    <button (click)="guardarReserva()" class="bg-green-600 hover:bg-green-700 px-6 py-4 rounded-xl font-bold w-full transition-colors cursor-pointer text-white text-lg shadow-lg mt-8">
+                        Confirmar Reserva
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

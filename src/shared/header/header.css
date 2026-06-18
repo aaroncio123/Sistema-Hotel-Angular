@@ -1,0 +1,31 @@
+.upn-color-primary {
+    color: #fbbb34;
+}
+.upn-color-secondary{
+    color: #fbfbfb;
+}
+
+.nav-container .nav-item {
+    color: #fbfbfb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nav-container .nav-item:hover {
+    color: #fbbb34;
+    transition: color 0.3s ease;
+}
+
+.btn-reserva{
+    background-color: #fbbb34;
+    color: black;
+    border: none;
+}
+
+.btn-reserva:hover {
+    background-color: #fbbb34;
+    color: black;
+    border: none;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
