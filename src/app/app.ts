@@ -2,12 +2,12 @@ import { Component, signal } from '@angular/core';
 import { Header } from '../shared/header/header'
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { Footer } from '../shared/footer/footer';
-import { Chatbot } from '../shared/chatbot/chatbot';
+import { PopupChat } from '../shared/popupchat/popupchat';
 import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  imports: [Header, RouterOutlet, Chatbot ,Footer],
+  imports: [Header, RouterOutlet, PopupChat ,Footer],
   standalone: true,
   providers: [],
   templateUrl: './app.html',

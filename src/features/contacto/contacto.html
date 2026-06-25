@@ -1,9 +1,26 @@
-<div class="contacto-container w-full h-[100vh] p-8 m-auto bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950">
-        <h2 class="text-white text-2xl font-bold mt-4 mb-6 text-center">Contactanos por los siguientes medios</h2>
-        <div class="contacto-images grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="contacto-image-container relative">
-              
+<div class="contacto-container w-full min-h-[100vh] p-8 m-auto bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 flex flex-col items-center">
+    <h2 class="text-white text-3xl font-bold mt-4 mb-2 text-center">Contáctanos</h2>
+    <p class="text-gray-400 mb-10 text-center max-w-lg">¿Tienes alguna duda o consulta? Escríbenos y nuestro equipo te responderá lo más pronto posible.</p>
+    
+    <div class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700 w-full max-w-2xl">
+        <form class="space-y-6">
+            <div>
+                <label class="block text-sm font-semibold text-gray-300 mb-2">Nombre Completo</label>
+                <input type="text" placeholder="Ej: Juan Pérez" class="w-full p-4 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500 transition-colors">
             </div>
-        </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-300 mb-2">Correo Electrónico</label>
+                <input type="email" placeholder="Ej: juan@correo.com" class="w-full p-4 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500 transition-colors">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-300 mb-2">Mensaje</label>
+                <textarea placeholder="Escribe tu consulta aquí..." class="w-full p-4 bg-slate-900 rounded-lg outline-none text-white border border-slate-600 focus:border-blue-500 transition-colors h-32"></textarea>
+            </div>
+            
+            <!-- Botón simulado para diseño -->
+            <button type="button" onclick="alert('¡Mensaje enviado exitosamente!\nNos pondremos en contacto contigo pronto.')" class="bg-blue-600 hover:bg-blue-700 px-6 py-4 rounded-xl font-bold w-full transition-colors cursor-pointer text-white text-lg shadow-lg">
+                Enviar Mensaje
+            </button>
+        </form>
+    </div>
 </div>
-
